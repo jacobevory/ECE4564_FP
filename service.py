@@ -12,10 +12,10 @@ from avkey.py import AVKEY
 #Checkpoint: Calculate PERCENTAGE change overall
 #Checkpoint: Compare and store percentage change to pre-defined intervals
 #Checkpoint: Set LED color to reflect percentage change
-#				Red: 	change < -4%
-#				Yellow:	-4% > change > 4%
-#				Green:	4% > change
-#			Potentially define gradient, the RGB ring is capable of anything.
+#                Red:     change < -4%
+#                Yellow:    -4% > change > 4%
+#                Green:    4% > change
+#            Potentially define gradient, the RGB ring is capable of anything.
 
 import requests
 import csv
@@ -67,9 +67,10 @@ for line in reader:
 
 pprint.pprint(symbols)
 #Checkpoint: Enter infinite loop
-while true:
+while True:
     #Checkpoint: Reset global change variable
     totalDollarChange = 0
+    totalDollarOpen = 0
     totalPercentageChange = 0
     #Checkpoint: Make http request for each stock, store first set of data in array
     #Checkpoint: Check close price against open price, calculate $$$ difference, add to global day change variable
@@ -83,12 +84,14 @@ while true:
         stockData = series[timeData]
         closeVal = stockData['4. close']
         openVal = stockData['1. open']
-
+        totalDollarOpen = (totalDollarOpen + float(openVal))
         stockGain = (float(closeVal) - float(openVal))
         totalDollarChange = totalDollarChange + stockGain
         print('The close value for ' + stock + ' on '+ timeData + ' is ' + closeVal + ' (' + str(stockGain) + ')')
-		
+
+
 #Checkpoint: Calculate PERCENTAGE change overall
+    totalPercentageChange = ((totalDollarChange / totalDollarOpen) * 100)
 
 #Checkpoint: Compare and store percentage change to pre-defined intervals
 #Checkpoint: Set LED color to reflect percentage change
