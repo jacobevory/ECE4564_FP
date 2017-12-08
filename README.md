@@ -9,3 +9,8 @@ LED driving resources:
 Overview: https://learn.adafruit.com/neopixels-on-raspberry-pi/overview
 Setup: https://github.com/jgarff/rpi_ws281x/wiki
 Dependency: http://www.instructables.com/id/Disable-the-Built-in-Sound-Card-of-Raspberry-Pi/
+
+Wiring Instructions:
+  DOUT = RPI3B physical pin 12
+  3.3V = RPI3B physical pin 1
+  GND  = RPI3B physical pin 6
