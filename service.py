@@ -8,14 +8,25 @@ import csv
 import smtplib
 import pprint
 
+def setLED():
+   #do work
+   return
+
+upperLimit = 4
+lowerLimit = 4
+
 SMSgreeting = 'Hello! Thank you for signing up for the Peaceful Portfolio Notification System. You will be notified if your portfolio changes more than 4%.'
+SMSlower = 'Your portfolio has decreased by more than ' + lowerLimit + '%.'
+SMSupper = 'Your portfolio has increased by more than ' + upperLimit + '%.'
+SMSsendFrom = 'peacefulportfolio'
 SMSaddress = '7576331950@vtext.com'
 seriesType = 'Time Series (1min)'
+
 #Checkpoint: initialize smtp server and TLS connection
 SMTPserver = smtplib.SMTP("smtp.gmail.com", 587)
 SMTPserver.starttls()
 SMTPserver.login('peacefulportfolio', 'PPPPPPPP')
-#SMTPserver.sendmail('peacefulportfolio@gmail.com', SMSaddress, SMSgreeting)
+SMTPserver.sendmail(SMSsendFrom, SMSaddress, SMSgreeting)
 
 #imported 2 dimensional wtf ever: inputdata
 stockSymbol = "NULL"
@@ -55,15 +66,17 @@ while k == 1:
 		stockGain = (float(closeVal) - float(openVal))
 		totalDollarChange = totalDollarChange + stockGain
 		print('The close value for ' + stockSymbol + ' on '+ timeData + ' is ' + closeVal + ' (' + str(stockGain) + ')')
-
-
 #Checkpoint: Calculate PERCENTAGE change overall
 	totalPercentageChange = ((totalDollarChange / totalDollarOpen) * 100)
 	print(totalPercentageChange)
-
 #Checkpoint: Compare and store percentage change to pre-defined intervals
 #Checkpoint: Set LED color to reflect percentage change
 #				Red:	 change < -4%
 #				Yellow:	-4% > change > 4%
 #				Green:	4% > change
 #			Potentially define gradient, the RGB ring is capable of anything.
+	if totalPercentageChange < (-1*lowerLimit):
+		SMTPserver.sendmail(SMSsendFrom, SMSaddress, SMSlower)
+	if totalPercentageChange > upperLimit:
+		SMTPserver.sendmail(SMSsendFrom, SMSaddress, SMSupper)
+	setLED()
