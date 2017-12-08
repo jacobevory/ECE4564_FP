@@ -22,7 +22,7 @@ def opt_parse():
 				signal.signal(signal.SIGINT, signal_handler)
 
 # LED strip configuration:
-LED_COUNT	  = 16	  # Number of LED pixels.
+LED_COUNT	  = 12	  # Number of LED pixels.
 LED_PIN		= 18	  # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN		= 10	  # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ	= 800000  # LED signal frequency in hertz (usually 800khz)
@@ -93,8 +93,8 @@ def theaterChaseRainbow(strip, wait_ms=50):
 
 # Main program logic follows:
 if __name__ == '__main__':
-		# Process arguments
-		opt_parse()
+	# Process arguments
+	opt_parse()
 
 	# Create NeoPixel object with appropriate configuration.
 	strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
