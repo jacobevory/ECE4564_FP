@@ -4,11 +4,21 @@ from avkey.py import AVKEY
 import json
 import requests
 import csv
+import smtplib
+
+#Checkpoint: Initialize variables
+SMSgreeting = 'Hello! Thank you for signing up for the Peaceful Portfolio Notification System. You will be notified if your portfolio changes more than 4%.'
+SMSaddress = '7576331950@vtext.com'
+
+#Checkpoint: initialize smtp server and TLS connection
+SMTPserver = smtplib.SMTP("smtp.gmail.com", 587)
+SMTPserver.starttls()
+SMTPserver.login('peacefulportfolio', 'PPPPPPPP')
+SMTPserver.sendmail('peacefulportfolio@gmail.com', SMSaddress, SMSgreeting)
+print("EMAIL SENT")
 
 #imported 2 dimensional wtf ever: inputdata
-
-#Checkpoint: Initialize appropriate libraries, time, json, etc.
-stockSymbol = 0
+stockSymbol = "NULL"
 stockRequestURL = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" stockSymbol "&outputsize=compact&apikey=" AVKEY
 #Checkpoint: Read stock data from file and store in 2 dimensional array/vector/mapped-list wtf ever
 reader = csv.reader(open('stockinput.csv', 'r'))
