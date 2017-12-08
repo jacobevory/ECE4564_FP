@@ -1,5 +1,8 @@
 # CircuitPython demo - NeoPixel
 
+############ DOCUMENTATION: https://learn.adafruit.com/neopixels-on-raspberry-pi/software
+########### https://learn.adafruit.com/adafruit-neopixel-uberguide/circuitpython
+
 import board
 import neopixel
 import time
