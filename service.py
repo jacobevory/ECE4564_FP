@@ -16,3 +16,34 @@ from avkey.py import AVKEY
 #				Yellow:	-4% > change > 4%
 #				Green:	4% > change
 #			Potentially define gradient, the RGB ring is capable of anything.
+
+import requests
+import csv
+import pprint
+
+stockGainTot = 0
+
+reader = csv.reader(open('stockinput.csv', 'r'))
+symbols = {}
+for line in reader:
+    k, v = line
+    symbols[k] = v
+
+pprint.pprint(symbols)
+
+for stock, boughtPrice in symbols.items():
+    r = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + stock + '&apikey=' + key)
+    d = r.json()
+    series = d['Time Series (Daily)']
+    timeData = next(iter(series))
+
+    #get most recent close value
+    stockData = series[timeData]
+    closeVal = stockData['4. close']
+    openVal = stockData['1. open']
+
+    stockGain = (float(closeVal) - float(openVal))
+    stockGainTot = stockGainTot + stockGain
+    print('The close value for ' + stock + ' on '+ timeData + ' is ' + closeVal + ' (' + str(stockGain) + ')')
+
+print('Overall stock gain: %.2f' % stockGainTot)
