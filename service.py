@@ -67,7 +67,7 @@ for line in reader:
 
 pprint.pprint(symbols)
 #Checkpoint: Enter infinite loop
-while true:
+while True:
     #Checkpoint: Reset global change variable
     totalDollarChange = 0
     totalPercentageChange = 0
