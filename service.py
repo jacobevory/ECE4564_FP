@@ -99,7 +99,8 @@ while True:
 	totalDollarChange = 0
 	totalDollarOpen = 0
 	totalPercentageChange = 0
-	currentDay = now.day
+	now = datetime.datetime.now()
+	currentDay = now.strftime("%j")
 	#Checkpoint: Make http request for each stock, store first set of data in array
 	#Checkpoint: Check close price against open price, calculate $$$ difference, add to global day change variable
 	#Checkpoint: Repeat for all stocks in list
@@ -129,8 +130,8 @@ while True:
 #			Potentially define gradient, the RGB ring is capable of anything.
 	if (totalPercentageChange < (-1*lowerLimit)) and (lastLowerSent != currentDay):
 		SMTPserver.sendmail(SMSsendFrom, SMSaddress, SMSlower)
-		lastLowerSent = now.day
+		lastLowerSent = now.strftime("%j")
 	if (totalPercentageChange > upperLimit) and (lastUpperSent != currentDay):
 		SMTPserver.sendmail(SMSsendFrom, SMSaddress, SMSupper)
-		lastUpperSent = now.day
+		lastUpperSent = now.strftime("%j")
 	setLED()
