@@ -16,8 +16,8 @@ def home():
         symbols[k] = v
     r.close()
     global p
-    if p == None:
-        p = subprocess.Popen(["python", "service.py"])
+    if p is None:
+        p = subprocess.Popen(["python", "fin.py"])
     return render_template('home.html', symbols=symbols)
 
 @app.route('/edit', methods={'GET'})
@@ -47,7 +47,11 @@ def addStock():
         if line != '':
             k, v = line
             symbols[k] = v
-    symbols[symbol] = shares
+    if symbol in symbols:
+        cur = symbols[symbol]
+        symbols[symbol] = float(cur) + float(shares)
+    else:
+        symbols[symbol] = shares
     f.close()
 
     w = open('stockinput.csv', 'w')
@@ -56,6 +60,34 @@ def addStock():
         writer.writerow([key, val])
     w.close()
     return render_template('addedStock.html')
+
+@app.route('/deleteStock', methods=['GET'])
+def delStock():
+    symbol = str(request.args.get('symbol'))
+    shares = str(request.args.get('shares'))
+
+    f = open('stockinput.csv', 'r')
+    reader = csv.reader(f)
+    symbols = {}
+    for line in reader:
+        if line != '':
+            k, v = line
+            symbols[k] = v
+    if symbol in symbols:
+        curshares = symbols[symbol]
+        changeshares = float(curshares) - float(shares)
+        if changeshares <= 0:
+            del symbols[symbol]
+        else:
+            symbols[symbol] = changeshares
+    f.close()
+
+    w = open('stockinput.csv', 'w')
+    writer = csv.writer(w, delimiter=',', lineterminator='\n')
+    for key, val in symbols.items():
+        writer.writerow([key, val])
+    w.close()
+    return render_template('deletedShares.html')
 
 
 app.run(host='0.0.0.0', debug=True)
