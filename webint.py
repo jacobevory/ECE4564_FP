@@ -4,7 +4,7 @@ import csv
 
 app = Flask(__name__)
 
-p = subprocess.Popen(["python", "service.py"])
+p = None
 
 @app.route('/', methods=['GET'])
 def home():
