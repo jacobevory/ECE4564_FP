@@ -8,14 +8,16 @@ import requests
 import csv
 import smtplib
 import pprint
-
+import datetime
 from neopixel import *
 import argparse
 import signal
 import sys
 
-def colorWipe():
-	
+def colorWipe(strip, color, wait_ms=50):
+	 for i in range(strip.numPixels()):
+                        strip.setPixelColor(i, Color(0, 0, 0))
+                        strip.show()
 
 def signal_handler(signal, frame):
 		colorWipe(strip, Color(0,0,0))
@@ -27,10 +29,11 @@ def opt_parse():
 		args = parser.parse_args()
 		if args.c:
 				signal.signal(signal.SIGINT, signal_handler)
-
+lastLowerSent = 0
+lastUpperSent = 0
 totalPercentageChange = 0
-upperLimit = 4
-lowerLimit = 4
+upperLimit = 1
+lowerLimit = 1
 
 # LED strip configuration:
 LED_COUNT	  = 12	  # Number of LED pixels.
@@ -90,14 +93,13 @@ for line in reader:
 
 pprint.pprint(symbols)
 #Checkpoint: Enter infinite loop
-k = 1
 while True:
 	opt_parse()
-	k+=1
 	#Checkpoint: Reset global change variable
 	totalDollarChange = 0
 	totalDollarOpen = 0
 	totalPercentageChange = 0
+	currentDay = now.day
 	#Checkpoint: Make http request for each stock, store first set of data in array
 	#Checkpoint: Check close price against open price, calculate $$$ difference, add to global day change variable
 	#Checkpoint: Repeat for all stocks in list
@@ -125,8 +127,10 @@ while True:
 #				Yellow:	-4% > change > 4%
 #				Green:	4% > change
 #			Potentially define gradient, the RGB ring is capable of anything.
-	if totalPercentageChange < (-1*lowerLimit):
+	if (totalPercentageChange < (-1*lowerLimit)) and (lastLowerSent != currentDay):
 		SMTPserver.sendmail(SMSsendFrom, SMSaddress, SMSlower)
-	if totalPercentageChange > upperLimit:
+		lastLowerSent = now.day
+	if (totalPercentageChange > upperLimit) and (lastUpperSent != currentDay):
 		SMTPserver.sendmail(SMSsendFrom, SMSaddress, SMSupper)
+		lastUpperSent = now.day
 	setLED()
