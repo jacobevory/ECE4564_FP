@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request
+import subprocess
 import csv
 
 app = Flask(__name__)
+
+p = subprocess.Popen(["python", "service.py"])
 
 @app.route('/', methods=['GET'])
 def home():
@@ -12,10 +15,16 @@ def home():
         k, v = line
         symbols[k] = v
     r.close()
+    global p
+    if p == None:
+        p = subprocess.Popen(["python", "service.py"])
     return render_template('home.html', symbols=symbols)
 
 @app.route('/edit', methods={'GET'})
 def edit():
+    global p
+    p.terminate()
+    p = None
     r = open('stockinput.csv', 'r')
     reader = csv.reader(r)
     symbols = {}
