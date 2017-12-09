@@ -4,9 +4,7 @@
     </head>
 
     <body>
-        <h1>Peaceful Portfolio Performance System</h1>
-        <h3>Welcome to the home page.</h3>
-        <p>Here you can add and delete stocks from your portfolio.</p>
+        <h1>Edit Portfolio</h1>
 
         <table>
             <tr>
@@ -19,11 +17,16 @@
                     <td>{{key}}</td>
                     <td>{{value}}</td>
                 </tr>
-            {% endfor %}
+            {% endfor%}
         </table>
 
-        <form action="/edit" method="get">
-            <input type="submit" value="Edit Portfolio">
+        <form action="/addStock" method="get">
+            Stock Symbol:
+            <input type="text" name="symbol">
+            Shares:
+            <input type="number" name="shares"><br>
+            <input type="submit" value="Add Stock">
         </form>
+
     </body>
 </html>
