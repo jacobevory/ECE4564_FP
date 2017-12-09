@@ -24,9 +24,16 @@
             Stock Symbol:
             <input type="text" name="symbol">
             Shares:
-            <input type="number" name="shares"><br>
+            <input type="number" step="0.01" name="shares"><br>
             <input type="submit" value="Add Stock">
         </form>
 
+        <form action="/deleteStock" method="get">
+            Stock Symbol:
+            <input type="text" name="symbol">
+            Shares:
+            <input type="number" step="0.01" name="shares"><br>
+            <input type="submit" value="Remove Shares">
+        </form>
     </body>
 </html>
