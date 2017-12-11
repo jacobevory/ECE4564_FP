@@ -18,6 +18,9 @@ def home():
     global p
     if p is None:
         p = subprocess.Popen(["sudo", "python3", "service.py", "-c"])
+    else:
+        p.kill()
+        p = subprocess.Popen(["sudo", "python3", "service.py", "-c"])
     return render_template('home.html', symbols=symbols)
 
 @app.route('/edit', methods={'GET'})
