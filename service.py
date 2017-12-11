@@ -33,7 +33,7 @@ lastLowerSent = 0
 lastUpperSent = 0
 totalPercentageChange = 0
 upperLimit = 1
-lowerLimit = 1
+lowerLimit = upperLimit
 
 # LED strip configuration:
 LED_COUNT	  = 12	  # Number of LED pixels.
@@ -67,12 +67,12 @@ def setLED():
 	return
 
 setLED()
-SMSgreeting = 'Hello! Thank you for signing up for the Peaceful Portfolio Notification System. You will be notified if your portfolio changes more than 4%.'
+SMSgreeting = 'Hello! Thank you for signing up for the Peaceful Portfolio Notification System. You will be notified if your portfolio changes more than ' + str(upperLimit) + '%.'
 SMSlower = 'Your portfolio has decreased by more than ' + str(lowerLimit) + '%.'
 SMSupper = 'Your portfolio has increased by more than ' + str(upperLimit) + '%.'
 SMSsendFrom = 'peacefulportfolio'
 SMSaddress = '7576331950@vtext.com'
-seriesType = 'Time Series (1min)'
+seriesType = 'Time Series (Daily)'
 
 #Checkpoint: initialize smtp server and TLS connection
 SMTPserver = smtplib.SMTP("smtp.gmail.com", 587)
@@ -105,7 +105,7 @@ while True:
 	#Checkpoint: Check close price against open price, calculate $$$ difference, add to global day change variable
 	#Checkpoint: Repeat for all stocks in list
 	for stockSymbol, stockQuantity in symbols.items():
-		stockRequestURL = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + stockSymbol + "&interval=1min&outputsize=compact&apikey=" + AVKEY
+		stockRequestURL = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + stockSymbol + "&outputsize=compact&apikey=" + AVKEY
 		r = requests.get(stockRequestURL)
 		d = r.json()
 		series = d[seriesType]
@@ -115,13 +115,15 @@ while True:
 		stockData = series[timeData]
 		closeVal = stockData['4. close']
 		openVal = stockData['1. open']
-		totalDollarOpen = (totalDollarOpen + float(openVal))
-		stockGain = (float(closeVal) - float(openVal))
+		totalDollarOpen = totalDollarOpen + (float(openVal) * float(stockQuantity))
+		stockGain = float((float(closeVal) - float(openVal)) * float(stockQuantity))
+#		print("stockgain: " + str(stockGain))
 		totalDollarChange = totalDollarChange + stockGain
+#		print("Close : " + str(closeVal) + " Open: " + str(openVal) + " Qty: " + str(stockQuantity))
 		print('The close value for ' + stockSymbol + ' on '+ timeData + ' is ' + closeVal + ' (' + str(stockGain) + ')')
 #Checkpoint: Calculate PERCENTAGE change overall
 	totalPercentageChange = ((totalDollarChange / totalDollarOpen) * 100)
-	print(totalPercentageChange)
+#	print("Total percentage change: " + str(totalPercentageChange))
 #Checkpoint: Compare and store percentage change to pre-defined intervals
 #Checkpoint: Set LED color to reflect percentage change
 #				Red:	 change < -4%
