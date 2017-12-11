@@ -20,6 +20,7 @@ def home():
         p = subprocess.Popen(["sudo", "python3", "service.py", "-c"])
     else:
         p.kill()
+        del p
         p = subprocess.Popen(["sudo", "python3", "service.py", "-c"])
     return render_template('home.html', symbols=symbols)
 
