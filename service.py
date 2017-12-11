@@ -72,6 +72,7 @@ SMSlower = 'Your portfolio has decreased by more than ' + str(lowerLimit) + '%.'
 SMSupper = 'Your portfolio has increased by more than ' + str(upperLimit) + '%.'
 SMSsendFrom = 'peacefulportfolio'
 SMSaddress = '7576331950@vtext.com'
+
 seriesType = 'Time Series (Daily)'
 
 #Checkpoint: initialize smtp server and TLS connection
@@ -101,6 +102,7 @@ while True:
 	totalPercentageChange = 0
 	now = datetime.datetime.now()
 	currentDay = now.strftime("%j")
+	currentDate = now.strftime("%Y-%m-%d")
 	#Checkpoint: Make http request for each stock, store first set of data in array
 	#Checkpoint: Check close price against open price, calculate $$$ difference, add to global day change variable
 	#Checkpoint: Repeat for all stocks in list
@@ -109,7 +111,7 @@ while True:
 		r = requests.get(stockRequestURL)
 		d = r.json()
 		series = d[seriesType]
-		timeData = next(iter(series))
+		timeData = currentDate #= next(iter(series))
 
 		#get most recent close value
 		stockData = series[timeData]
